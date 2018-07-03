@@ -24,6 +24,7 @@ SIZE		:= $(PREFIX)-size
 OBJDUMP		:= $(PREFIX)-objdump
 GDB		:= $(PREFIX)-gdb
 STFLASH		= $(shell which st-flash)
+OPENOCD		= $(shell which openocd)
 STYLECHECK	:= /checkpatch.pl
 STYLECHECKFLAGS	:= --no-tree -f --terse --mailback
 STYLECHECKFILES	:= $(shell find . -name '*.[ch]')
@@ -136,6 +137,12 @@ flash:	$(BINARY).bin
 # Flash 128k Device
 bigflash: $(BINARY).bin
 	$(STFLASH) --flash=128k write $(BINARY).bin 0x8000000
+
+flash_jlink: $(BINARY).elf
+	$(OPENOCD) -f interface/jlink.cfg -c "transport select swd" -f target/stm32f1x.cfg -c "program $(BINARY).elf verify reset exit"
+
+flash_cmsis: $(BINARY).elf
+	$(OPENOCD) -f interface/cmsis-dap.cfg -c "transport select swd" -f target/stm32f1x.cfg -c "program $(BINARY).elf verify reset exit"
 
 .PHONY: images clean elf bin hex srec list all
 
