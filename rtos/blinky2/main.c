@@ -29,6 +29,14 @@ task1(void *args __attribute((unused))) {
 	}
 }
 
+static void
+task2(void *args __attribute((unused))) {
+
+	for (;;) {
+	    __asm__("nop");
+    }
+}
+
 int
 main(void) {
 
@@ -42,6 +50,7 @@ main(void) {
 		GPIO13);
 
 	xTaskCreate(task1,"LED",100,NULL,configMAX_PRIORITIES-1,NULL);
+	xTaskCreate(task2,"SPIN",100,NULL,configMAX_PRIORITIES-1,NULL);
 	vTaskStartScheduler();
 
 	for (;;);

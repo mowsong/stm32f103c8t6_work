@@ -20,6 +20,42 @@
 
 static QueueHandle_t uart_txq;		// TX queue for UART
 
+void xitoa(int n, char *s);
+
+void xitoa(int n, char *s)
+{
+    int i;
+    int j;
+    unsigned int k;
+
+    if (n < 0) {
+        k = -n;
+    }
+    else {
+        k = n;
+    }
+    
+    i = 0;
+    do {
+        s[i++] = k % 10 + '0';
+    } while ( (k /= 10) > 0);
+    
+    if (n < 0) {
+        s[i++] = '-';
+    }
+    
+    s[i--] = '\0';
+
+    /* in place reverse */
+    j = 0;
+    while ( j < i ) {
+        k = s[j];
+        s[j++] = s[i];
+        s[i--] = k;
+    }
+
+}
+
 /*********************************************************************
  * Configure and initialize USART1:
  *********************************************************************/
@@ -85,9 +121,15 @@ uart_puts(const char *s) {
  *********************************************************************/
 static void
 demo_task(void *args __attribute__((unused))) {
+    int  n;
+    char buffer[20];
 
+    n = 0;
 	for (;;) {
-		uart_puts("Now this is a message..\n\r");
+        xitoa(n++, buffer);
+		uart_puts("Now this is message ");
+        uart_puts(buffer);
+        uart_puts("\n\r");
 		uart_puts("  sent via FreeRTOS queues.\n\n\r");
 		vTaskDelay(pdMS_TO_TICKS(1000));
 	}

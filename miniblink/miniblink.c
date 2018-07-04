@@ -38,7 +38,7 @@ main(void) {
 
 	for (;;) {
 		gpio_clear(GPIOC,GPIO13);	/* LED on */
-		for (i = 0; i < 1500000; i++)	/* Wait a bit. */
+		for (i = 0; i < 150000; i++)	/* Wait a bit. */
 			__asm__("nop");
 
 		gpio_set(GPIOC,GPIO13);		/* LED off */
