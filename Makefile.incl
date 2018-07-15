@@ -144,6 +144,15 @@ flash_jlink: $(BINARY).elf
 flash_cmsis: $(BINARY).elf
 	$(OPENOCD) -f interface/cmsis-dap.cfg -c "transport select swd" -f target/stm32f1x.cfg -c "program $(BINARY).elf verify reset exit"
 
-.PHONY: images clean elf bin hex srec list all
+debug: $(BINARY).elf
+	$(GDB) -iex "set auto-load-safe-path $(CURDIR)" --tui $(BINARY).elf
+
+debug_jlink: 
+	$(OPENOCD) -f interface/jlink_swd.cfg -f target/stm32f1x.cfg
+
+debug_cmsis: 
+	$(OPENOCD) -f interface/cmsis-dap.cfg -f target/stm32f1x.cfg
+
+.PHONY: images clean elf bin hex srec list all flash_jlink flash_cmsis debug debug_cmsis debug_jlink
 
 # End
