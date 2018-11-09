@@ -155,4 +155,6 @@ debug_cmsis:
 
 .PHONY: images clean elf bin hex srec list all flash_jlink flash_cmsis debug debug_cmsis debug_jlink
 
+-include $(OBJS:.o=.d)
+
 # End
